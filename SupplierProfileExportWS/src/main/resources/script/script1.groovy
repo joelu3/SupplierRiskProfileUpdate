@@ -24,26 +24,9 @@ import java.lang.Math;
 import java.text.DecimalFormat;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-//import groovyx.net.http.HTTPBuilder;
 
 def Message processData(Message message) {
-    //Body 
-
-       ///def body = message.getBody();
-       ///message.setBody(body + "Body is modified");
-       //Headers 
-       ///def map = message.getHeaders();
-       ///def value = map.get("oldHeader");
-       ///message.setHeader("oldHeader", value + "modified");
-       ///message.setHeader("newHeader", "newHeader");
-       //Properties 
-       ///map = message.getProperties();
-       ///value = map.get("oldProperty");
-       ///message.setProperty("oldProperty", value + "modified");
-       ///message.setProperty("newProperty", "newProperty");
-       ///return message;    
-
-     
+   
         def xmlString = message.getBody(String.class);
 
         def SupplierProfileRequestEntry = new XmlSlurper().parseText(xmlString);
@@ -68,27 +51,6 @@ def Message processData(Message message) {
         def legalrisk=SupplierProfileRequestEntry.LegalRisk
         def operationalrisk=SupplierProfileRequestEntry.OperationalRisk
         
-        /*
-        <LoginId></LoginId>
-        <FullName></FullName>
-        <EmailAddress></EmailAddress>
-        <Phone></Phone>
-        <DefaultCurrency></DefaultCurrency>
-        <PreferredLocale></PreferredLocale>
-        <Organization>Grainger</Organization>
-        <OrgId>USSU9026</OrgId>
-            <MigrationStatus></MigrationStatus>
-            <IsUserApproved></IsUserApproved>
-            <TimeUpdated>Mon Sep 28 13:49:44 PDT 2020</TimeUpdated>
-            <TimeCreated>Tue Apr 09 04:58:32 PDT 2019</TimeCreated>
-            <CreatedBy></CreatedBy>
-            <EnvironmentalRisk></EnvironmentalRisk>
-            <FinancialRisk></FinancialRisk>
-            <LegalRisk></LegalRisk>
-            <OperationalRisk></OperationalRisk>
-        */    
-
-        //todo: add mapping conversion logic
         keyStr.append("{");
         keyStr.append("\"loginid\":\"$loginid\", ");
         keyStr.append("\"fullname\":\"$fullname\", ");
@@ -108,11 +70,10 @@ def Message processData(Message message) {
         keyStr.append("\"legalrisk\":\"$legalrisk\", ");
         keyStr.append("\"operationalrisk\":\"$operationalrisk\", ");
         
-        //def vendormap = message.getProperties();
-        //def smvendorId = vendormap.get("suppliervendorid");
+        //Make call to ext db for profileid to vendorid map
         def get=new URL("https://temp");
         def smvendorid = "[]";
-        //if(orgId!=null||orgId!=""){
+        
             get = new URL("https://fairestdb.p.rapidapi.com/suppliervendoridmap1/sandboxatlanticmap1/supplierprofileid/$orgId").openConnection();
             get.setRequestMethod("GET");
             get.setDoOutput(true);
@@ -121,7 +82,7 @@ def Message processData(Message message) {
             get.setRequestProperty("useQueryString", "true");
             get.setRequestProperty("x-rapidapi-key", "7732bb98a8msh5a329d98ae21f4cp196fd1jsn27dd9c7b203c");
             get.setRequestProperty("x-rapidapi-host", "fairestdb.p.rapidapi.com");
-            //def getRC = get.getResponseCode();
+
             if(get.getResponseCode().equals(200)){
                 def output = get.getInputStream().getText()
         
@@ -132,126 +93,112 @@ def Message processData(Message message) {
                     smvendorid=smvendorid.replaceAll("[\\[\\]]", "");
                 }
             }
-        //}
 
-       /* 
-        def baseUrl = new URL(https://fairestdb.p.rapidapi.com/suppliervendoridmap1/sandboxatlanticmap1/supplierprofileid/$orgId")
 
-         HttpURLConnection connection = (HttpURLConnection) baseUrl.openConnection();
-         connection.addRequestProperty("Accept", "application/json")
-         connection.addRequestProperty("useQueryString", "true");
-         connection.addRequestProperty("x-rapidapi-key", "7732bb98a8msh5a329d98ae21f4cp196fd1jsn27dd9c7b203c");
-         connection.addRequestProperty("x-rapidapi-host", "fairestdb.p.rapidapi.com");
-         connection.with {
-           doOutput = true
-           requestMethod = 'GET'
-           println content.text
-         }
-        */
-        //if(orgId=="ACM_6023084"){
-            //Dell
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S26824176\" ");
+/*
+Old Hard Code - Obsolete - Reference
+
+        if(orgId=="ACM_6023084"){
+            Dell
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S26824176\" ");
                 
-        //}       
-        //else if(orgId=="USSU-CIG10"){
-            //Sonic
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931936\" ");
+        }       
+        else if(orgId=="USSU-CIG10"){
+            Sonic
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931936\" ");
 
-        //}
-        //else if(orgId=="USSU-CIG04"){
-            //Sky Mac
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931939\" ");            
-        //}
-        //else if(orgId=="USSU-CIG05"){
-            //Windy Corp
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931931\" ");            
-        //}
-        //else if(orgId=="USSU-CIG08"){
-            //Airy Corp.
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931933\" ");            
-        //}
-        //else if(orgId=="USSU-CIG09"){
-            //Startrek Limited
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931932\" ");            
-        //}
-        //else if(orgId=="USSU-CIG02"){
-            //Nube Corporation
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931938\" ");            
-        //}
-        //else if(orgId=="USSU-CIG03"){
-            //Mrak Enterprises
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17924906\" ");            
-        //}
-        //else if(orgId=="USSU-CIG12"){
-            //Graig Industries
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931941\" ");            
-        //}
-        //else if(orgId=="USSU-CIG17"){
-            //Kroschke
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931929\" ");            
-        //}  
-        //else if(orgId=="USSU-CIG07"){
-            //Cloudy Corporation
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931940\" ");            
-        //}
-        //else if(orgId=="USSU-CIG06"){
-            //Rany Corp. - (Sandbox)
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17943000\" ");            
-        //}
-        //else if(orgId=="USSU-CIG01"){
-            //Oblako Industries
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931934\" ");            
-        //}
-        //else if(orgId=="USSU-CIG13"){
-            //Umbrella Corp
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931928\" ");            
-        //}
-        //else if(orgId=="ACM_6023083"){
-            //NTT Data Inc
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S26824175\" ");            
-        //}
-        //else if(orgId=="ACM_6023082"){
-            //Microsoft Inc
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S26824174\" ");            
-        //}
-        //else if(orgId=="USSU-CIG18"){
-            //Spot Buy
-        //    keyStr.append("\"orgId\":");
-        //    keyStr.append("\"S17931937\" ");            
-        //}
-        //else 
-                //if(orgId!=null){
-            //keyStr.append("\"orgId\":\"$smvendorid\", ");"
-        //}
-        
+        }
+        else if(orgId=="USSU-CIG04"){
+            Sky Mac
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931939\" ");            
+        }
+        else if(orgId=="USSU-CIG05"){
+            Windy Corp
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931931\" ");            
+        }
+        else if(orgId=="USSU-CIG08"){
+            Airy Corp.
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931933\" ");            
+        }
+        else if(orgId=="USSU-CIG09"){
+            Startrek Limited
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931932\" ");            
+        }
+        else if(orgId=="USSU-CIG02"){
+            Nube Corporation
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931938\" ");            
+        }
+        else if(orgId=="USSU-CIG03"){
+            Mrak Enterprises
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17924906\" ");            
+        }
+        else if(orgId=="USSU-CIG12"){
+            Graig Industries
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931941\" ");            
+        }
+        else if(orgId=="USSU-CIG17"){
+            Kroschke
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931929\" ");            
+        }  
+        else if(orgId=="USSU-CIG07"){
+            Cloudy Corporation
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931940\" ");            
+        }
+        else if(orgId=="USSU-CIG06"){
+            Rany Corp. - (Sandbox)
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17943000\" ");            
+        }
+        else if(orgId=="USSU-CIG01"){
+            Oblako Industries
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931934\" ");            
+        }
+        else if(orgId=="USSU-CIG13"){
+            Umbrella Corp
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931928\" ");            
+        }
+        else if(orgId=="ACM_6023083"){
+            NTT Data Inc
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S26824175\" ");            
+        }
+        else if(orgId=="ACM_6023082"){
+            Microsoft Inc
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S26824174\" ");            
+        }
+        else if(orgId=="USSU-CIG18"){
+            Spot Buy
+            keyStr.append("\"orgId\":");
+            keyStr.append("\"S17931937\" ");            
+        }
+        else 
+                if(orgId!=null){
+            keyStr.append("\"orgId\":\"$smvendorid\", ");"
+        }
+ */       
         if(smvendorid!="[]"){
-            //Spot Buy Vendor DE
             keyStr.append("\"orgId\":");
             keyStr.append("\"$smvendorid\" ");            
         }
         else{
-            //set a defult to the "Test" Supplier
             keyStr.append("\"orgId\":");
             keyStr.append("\"null\" ");
         }
-        //keyStr.append("\"getRC\":");
-        //keyStr.append("\"$smvendorid\" ");
+
         keyStr.append("}");
         message.setHeader("Content-Type", "application/json;charset=UTF-8");
     

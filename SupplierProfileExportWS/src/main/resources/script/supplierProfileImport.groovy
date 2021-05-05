@@ -27,13 +27,15 @@ import java.text.SimpleDateFormat;
 import org.codehaus.groovy.runtime.EncodingGroovyMethods;
 
 def Message processData(Message message) {
-    //Body 
+ 
         println("hello there");
         def encodedCSVString = message.getBody(String.class);
 
         StringBuilder keyStr = new StringBuilder();
         
         /*
+        Sample XML - Reference
+        
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:Ariba:Sourcing:vrealm_350041">
    <soapenv:Header>
       <urn:Headers>
@@ -64,26 +66,15 @@ NCIsIjUi
 </soapenv:Envelope>
         */    
 
-        //todo: add mapping conversion logic
-        //keyStr.append("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Ariba:Sourcing:vrealm_350041\">");
-        //keyStr.append("<soapenv:Header>");
-        //keyStr.append("<urn:Headers>");
-        //keyStr.append("<urn:variant>vrealm_350041</urn:variant>");
-        //keyStr.append("<urn:partition>prealm_350041</urn:partition>");
-        //keyStr.append("</urn:Headers>");
+
         keyStr.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
         keyStr.append("<urn:SupplierProfileImportRequest partition=\"prealm_350041\" variant=\"vrealm_350041\" xmlns:urn=\"urn:Ariba:Sourcing:vrealm_350041\">")
-        //keyStr.append("</soapenv:Header>");
-        //keyStr.append("<soapenv:Body>");
-        //keyStr.append("<urn:SupplierProfileImportRequest partition=\"prealm_350041\" variant=\"vrealm_350041\">");
         keyStr.append("<urn:WSSupplierProfileImportInputBean_Item>");
         keyStr.append("<urn:item>");
         keyStr.append("<urn:ProfileFile>$encodedCSVString</urn:ProfileFile>");
         keyStr.append("</urn:item>");
         keyStr.append("</urn:WSSupplierProfileImportInputBean_Item>");
         keyStr.append("</urn:SupplierProfileImportRequest>");
-        //keyStr.append("</soapenv:Body>");
-        //keyStr.append("</soapenv:Envelope>");
 
         message.setHeader("Content-Type", "text/plain");
     

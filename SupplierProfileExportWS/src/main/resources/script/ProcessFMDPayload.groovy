@@ -34,6 +34,8 @@ def Message processData(Message message) {
         StringBuilder keyStr = new StringBuilder();
         
         /*
+        Sample Prepared XML - Reference
+        
 <n0:MasterDataReplReqMsg xmlns:n0="http://sap.com/xi/ARBCIG1" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:prx="urn:sap.com:proxy:QE2:/1SAI/TASD374B56E2305E7E70622:752">
 	<Header>
 		<Parameters>

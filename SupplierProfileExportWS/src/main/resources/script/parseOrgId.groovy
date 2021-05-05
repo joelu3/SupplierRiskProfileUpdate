@@ -19,31 +19,16 @@ import com.sap.gateway.ip.core.customdev.util.Message;
 import java.util.HashMap;
 import groovy.util.XmlSlurper;
 def Message processData(Message message) {
-    //Body 
-       ///def body = message.getBody();
-       ///message.setBody(body + "Body is modified");
-       //Headers 
-       ///def map = message.getHeaders();
-       ///def value = map.get("oldHeader");
-       ///message.setHeader("oldHeader", value + "modified");
-       ///message.setHeader("newHeader", "newHeader");
-       //Properties 
-       ///map = message.getProperties();
-       ///value = map.get("oldProperty");
-       ///message.setProperty("oldProperty", value + "modified");
-       ///message.setProperty("newProperty", "newProperty");
-       //return message;
 
     message.clearSoapHeaders();
     def body=message.getBody(String.class);
     def document = new XmlSlurper().parseText(body);
 
     def suppProfileReqEntry = document.SupplierProfileRequestList.SupplierProfileRequestEntry
-    //def orgid=document.SupplierProfileRequestList.SupplierProfileRequestEntry[0].OrgId.text()
-    //println "orgid= $orgid"
+
     def size=suppProfileReqEntry.size()
     println "size= $size"
-    //Map<String, String> mp= new HashMap<>();
+    
     StringBuilder keyStr = new StringBuilder();
     keyStr.append("<?xml version=\'1.0\' encoding=\'UTF-8\'?>");
     keyStr.append("<document>");
@@ -70,7 +55,7 @@ def Message processData(Message message) {
         def operationalrisk=document.SupplierProfileRequestList.SupplierProfileRequestEntry[i].OperationalRisk.text()
         
         if(orgid!="[Unspecified]"&&orgid!="[System]"&&orgid!="OrgId"&&orgid!="[Unknown]"){
-            //println "orgid= $orgid"
+           
             keyStr.append("<SupplierProfileRequestEntry>");
             keyStr.append("<LoginId>$loginid</LoginId>");
             keyStr.append("<FullName>$fullname</FullName>");
@@ -94,9 +79,9 @@ def Message processData(Message message) {
     }
     keyStr.append("</SupplierProfileRequestList>");
     keyStr.append("</document>");
-    //def result = JsonOutput.prettyPrint(parameter.toString());
+
     def result=keyStr.toString();
-    //message.setProperties(mp);
+
     message.setBody(result);
     return message;
     
