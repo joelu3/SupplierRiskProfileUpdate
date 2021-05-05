@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="urn:Ariba:Sourcing:vrealm_350041" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SupplierProfileExport" targetNamespace="urn:Ariba:Sourcing:vrealm_350041">
+    <wsdl:types>
+        <xsd:schema elementFormDefault="qualified" targetNamespace="urn:Ariba:Sourcing:vrealm_350041" xmlns:typens="urn:Ariba:Sourcing:vrealm_350041">
+            <xsd:element name="Headers">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="variant" type="xsd:string"/>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="partition" type="xsd:string"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SupplierProfileExportRequest">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element minOccurs="0" name="WSSupplierProfileExportInputBean_Item">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element maxOccurs="1" minOccurs="0" name="item" type="typens:WSSupplierProfileExportInputBean"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                    <xsd:attribute name="partition" type="xsd:string"/>
+                    <xsd:attribute name="variant" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SupplierProfileExportReply">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element minOccurs="0" name="WSSupplierProfileExportOutputBean_Item">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element maxOccurs="1" minOccurs="0" name="item" type="typens:WSSupplierProfileExportOutputBean"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                    <xsd:attribute name="partition" type="xsd:string"/>
+                    <xsd:attribute name="variant" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="WSSupplierProfileExportInputBean">
+                <xsd:all>
+                    <xsd:element minOccurs="0" name="FromDate" type="xsd:dateTime">
+                        <xsd:annotation>
+                            <xsd:documentation>Start date for a date range. The web service converts this to a calendar date (hours, minutes, and seconds are set to 0) and exports all organizations that were last updated after the start of the FromDate date and before the start of the ToDate date (items updated after the start of the ToDate are excluded). Example: 2013-01-31T12:00:00.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="RealmName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Realm Name e.g. Realm_1</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="ToDate" type="xsd:dateTime">
+                        <xsd:annotation>
+                            <xsd:documentation>End date for a date range. The web service converts this to a calendar date (hours, minutes, and seconds are set to 0) and exports all organizations that were last updated after the start of the FromDate date and before the start of the ToDate date (items updated after the start of the ToDate are excluded). Example: 2013-02-28T12:00:00.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="WSSupplierProfileExportOutputBean">
+                <xsd:all>
+                    <xsd:element name="ErrorMessage" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>Message returned from the service execution.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="MimeType" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>The mime type of the exported file.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="Status" type="xsd:integer">
+                        <xsd:annotation>
+                            <xsd:documentation>Return status. 0 indicates success.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="SupplierProfileFile" type="xsd:base64Binary">
+                        <xsd:annotation>
+                            <xsd:documentation>A supplier profile file (CSV file), base64 encoded.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:all>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="HeadersMessage">
+        <part element="typens:Headers" name="header"/>
+    </wsdl:message>
+    <wsdl:message name="SupplierProfileExportRequestMessage">
+        <part element="typens:SupplierProfileExportRequest" name="body"/>
+    </wsdl:message>
+    <wsdl:message name="SupplierProfileExportReplyMessage">
+        <part element="typens:SupplierProfileExportReply" name="body"/>
+    </wsdl:message>
+    <wsdl:portType name="SupplierProfileExportPortType">
+        <wsdl:operation name="SupplierProfileExportOperation">
+            <wsdl:input message="typens:SupplierProfileExportRequestMessage"/>
+            <wsdl:output message="typens:SupplierProfileExportReplyMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SupplierProfileExportBinding" type="typens:SupplierProfileExportPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="SupplierProfileExportOperation">
+            <soap:operation soapAction="/Process Definition"/>
+            <wsdl:input>
+                <soap:header message="typens:HeadersMessage" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header message="typens:HeadersMessage" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SupplierProfileExport">
+        <wsdl:documentation>Ariba Web Service</wsdl:documentation>
+        <wsdl:port binding="typens:SupplierProfileExportBinding" name="SupplierProfileExportPortType">
+            <soap:address location="https://s3.ariba.com/Sourcing/soap/SandboxAtlantic-T/SupplierProfileExport"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
