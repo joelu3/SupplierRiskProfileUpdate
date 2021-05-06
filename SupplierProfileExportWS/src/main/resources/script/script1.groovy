@@ -80,7 +80,7 @@ def Message processData(Message message) {
             get.setRequestProperty("Content-Type", "application/json");
             get.setRequestProperty("Accept", "application/json")
             get.setRequestProperty("useQueryString", "true");
-            get.setRequestProperty("x-rapidapi-key", "7732bb98a8msh5a329d98ae21f4cp196fd1jsn27dd9c7b203c");
+            get.setRequestProperty("x-rapidapi-key", "");
             get.setRequestProperty("x-rapidapi-host", "fairestdb.p.rapidapi.com");
 
             if(get.getResponseCode().equals(200)){
